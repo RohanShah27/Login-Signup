@@ -25,34 +25,52 @@ describe("Test suite for User services apis", () => {
       });
   });
   // NEGATIVE TEST CASES
-  //   it("should test for sign up api to send negative response when request is malformed", (done) => {
-  //     let requestBody = {
-  //       emailId: "test@gmail.com",
-  //     };
-  //     requestBody = JSON.stringify(requestBody);
-  //     request(app)
-  //       .post("/api/user-services/sign-up")
-  //       .send(requestBody)
-  //       .set("Content-type", "application/json")
-  //       .then((res) => {
-  //         expect(res.statusCode).toBe(400);
-  //         expect(res.body.message).toBe("Malformed Request");
-  //         done();
-  //       });
-  //   });
-  //   it("should test for sign up api to send negative response when request is malformed", (done) => {
-  //     let requestBody = {
-  //       password: "password",
-  //     };
-  //     requestBody = JSON.stringify(requestBody);
-  //     request(app)
-  //       .post("/api/user-services/sign-up")
-  //       .send(requestBody)
-  //       .set("Content-type", "application/json")
-  //       .then((res) => {
-  //         expect(res.statusCode).toBe(400);
-  //         expect(res.body.message).toBe("Malformed Request");
-  //         done();
-  //       });
-  //   });
+  it("should test for sign up api to send negative response when request is malformed", (done) => {
+    let requestBody = {
+      emailId: "test@gmail.com",
+    };
+    requestBody = JSON.stringify(requestBody);
+    let payload = encrypt(requestBody);
+    request(app)
+      .post("/api/user-services/sign-up")
+      .send({ encryptedData: payload })
+      .set("Content-type", "application/json")
+      .then((res) => {
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("Malformed Request");
+        done();
+      });
+  });
+  it("should test for sign up api to send negative response when request is malformed", (done) => {
+    let requestBody = {
+      password: "password",
+    };
+    requestBody = JSON.stringify(requestBody);
+    let payload = encrypt(requestBody);
+    request(app)
+      .post("/api/user-services/sign-up")
+      .send({ encryptedData: payload })
+      .set("Content-type", "application/json")
+      .then((res) => {
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("Malformed Request");
+        done();
+      });
+  });
+  it("should test for sign up api to send negative response when request is malformed for Man in middle attack", (done) => {
+    let requestBody = {
+      password: "password",
+    };
+    requestBody = JSON.stringify(requestBody);
+    let payload = encrypt(requestBody);
+    request(app)
+      .post("/api/user-services/sign-up")
+      .send({ payload })
+      .set("Content-type", "application/json")
+      .then((res) => {
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("Key possibly incorrect");
+        done();
+      });
+  });
 });
