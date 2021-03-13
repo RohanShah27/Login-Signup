@@ -49,3 +49,5 @@ if (process.env.NODE_ENV !== "test") {
       console.log(`at:index.js -> ${JSON.stringify(err)}`);
     });
 }
+
+module.exports = app;

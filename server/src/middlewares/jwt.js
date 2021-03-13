@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const config = require("config");
+// const config = require("config");
 // const jwtPrivateKey=config.get("JWT_PRIVATE_KEY");
 const jwtPrivateKey = "myKey";
 
