@@ -7,6 +7,8 @@ describe("Test suite for User services apis", () => {
     let requestBody = {
       emailId: "test@gmail.com",
       password: "somepassword",
+      mobileNumber: "1234567890",
+      userName: "Test user",
     };
     requestBody = JSON.stringify(requestBody);
     request(app)
