@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const users = require("./src/routes/user");
 const error = require("./src/middlewares/error");
+const mongoose = require("mongoose");
 //Create an instance of express
 const app = express();
 
@@ -31,23 +32,52 @@ morgan.token("remote-addr", (req) => {
 app.use(
   morgan("common", { stream: { write: (message) => console.log(message) } })
 );
+
+//Connection events to check db connectivity
+mongoose.connection.on("connected", function () {
+  //Check if port exists in the environment else use 5000
+  const port = process.env.PORT || 5000;
+  //If the environment is test, do not start the express server
+  if (process.env.NODE_ENV !== "test") {
+    app
+      .listen(parseInt(port.toString()), "0.0.0.0", () => {
+        //Listen the express server on the given port and log a message to the logs
+        console.log(`Server is listening on port ${port}`);
+      })
+      .on("error", (err) => {
+        //In case of an error, log the error to the logs
+        console.log(`at:index.js -> ${JSON.stringify(err)}`);
+      });
+  }
+});
+
+// If the connection throws an error
+mongoose.connection.on("error", function (err) {
+  // dbStatus = false;
+  // dbMessage = "Database Connectivity Lost";
+  log.fatal({
+    message: "Mongoose default connection error: ",
+    description: err,
+  });
+});
+
+// When the connection is disconnected
+mongoose.connection.on("disconnected", function () {
+  console.log("Mongoose default connection disconnected");
+});
+
+// If the Node process ends, close the Mongoose connection
+process.on("SIGINT", function () {
+  mongoose.connection.close(function () {
+    console.log(
+      "Mongoose default connection disconnected through app termination"
+    );
+    process.exit(0);
+  });
+});
+
 //use the exposed endpoints from routes
 app.use("/api/user-services", users);
 app.use(error);
-//TODO add condition to check for db avaibility
-//Check if port exists in the environment else use 5000
-const port = process.env.PORT || 5000;
-//If the environment is test, do not start the express server
-if (process.env.NODE_ENV !== "test") {
-  app
-    .listen(parseInt(port.toString()), "0.0.0.0", () => {
-      //Listen the express server on the given port and log a message to the logs
-      console.log(`Server is listening on port ${port}`);
-    })
-    .on("error", (err) => {
-      //In case of an error, log the error to the logs
-      console.log(`at:index.js -> ${JSON.stringify(err)}`);
-    });
-}
 
 module.exports = app;

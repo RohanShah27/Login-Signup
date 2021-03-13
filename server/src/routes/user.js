@@ -19,7 +19,7 @@ router.post("/log-in", async (req, res, next) => {
   try {
     res.status(200).send({
       status: 200,
-      message: "Log in successfully",
+      message: "Logged in successfully",
     });
   } catch (err) {
     next(err);
