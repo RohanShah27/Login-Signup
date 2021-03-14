@@ -34,37 +34,42 @@ app.use(
   morgan("common", { stream: { write: (message) => console.log(message) } })
 );
 
+// Connect to the db
+mongoose.connect("mongodb://localhost:27017/loginSignup", {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+});
 //Connection events to check db connectivity
-
-// mongoose.connection.on("connected", function () {
-//Check if port exists in the environment else use 5000
-const port = process.env.PORT || 5000;
-//If the environment is test, do not start the express server
-if (process.env.NODE_ENV !== "test") {
-  app
-    .listen(parseInt(port.toString()), "0.0.0.0", () => {
-      //Listen the express server on the given port and log a message to the logs
-      console.log(`Server is listening on port ${port}`);
-    })
-    .on("error", (err) => {
-      //In case of an error, log the error to the logs
-      console.log(`at:index.js -> ${JSON.stringify(err)}`);
-    });
-}
-// });
+mongoose.connection.on("connected", function () {
+  //Check if port exists in the environment else use 5000
+  const port = process.env.PORT || 5000;
+  //If the environment is test, do not start the express server
+  if (process.env.NODE_ENV !== "test") {
+    app
+      .listen(parseInt(port.toString()), "0.0.0.0", () => {
+        //Listen the express server on the given port and log a message to the logs
+        console.log(`Server is listening on port ${port}`);
+      })
+      .on("error", (err) => {
+        //In case of an error, log the error to the logs
+        console.log(`at:index.js -> ${JSON.stringify(err)}`);
+      });
+  }
+});
 
 // If the connection throws an error
-// mongoose.connection.on("error", function (err) {
-//   console.log({
-//     message: "Mongoose default connection error: ",
-//     description: err,
-//   });
-// });
+mongoose.connection.on("error", function (err) {
+  console.log({
+    message: "Mongoose default connection error: ",
+    description: err,
+  });
+});
 
 // // When the connection is disconnected
-// mongoose.connection.on("disconnected", function () {
-//   console.log("Mongoose default connection disconnected");
-// });
+mongoose.connection.on("disconnected", function () {
+  console.log("Mongoose default connection disconnected");
+});
 
 // If the Node process ends, close the Mongoose connection
 process.on("SIGINT", function () {

@@ -36,7 +36,6 @@ router.post("/sign-up", async (req, res, next) => {
   try {
     //   Save the request body data in variables
     let { emailId, password, mobilePhone, userName } = req.body;
-    console.log("req.body: ", req.body);
     // validate the request body if some data is found missing then throw malformed error using common error handler
     if (!emailId || !password || !mobilePhone || !userName) {
       throw { customMessage, statusCode };
