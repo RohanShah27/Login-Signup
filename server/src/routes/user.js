@@ -3,7 +3,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../middlewares/jwt");
-const { signUp } = require("../controllers/user");
+const { signUp, logIn } = require("../controllers/user");
 //Creating a router instance using express
 const router = express.Router();
 const customMessage = "Malformed Request";
@@ -17,9 +17,16 @@ const statusCode = "400";
  */
 router.post("/log-in", async (req, res, next) => {
   try {
+    const controllerResult = await logIn(req.body);
+    if (controllerResult.error) {
+      throw {
+        customMessage: controllerResult.err.message,
+      };
+    }
     res.status(200).send({
       status: 200,
       message: "Logged in successfully",
+      data: controllerResult.token,
     });
   } catch (err) {
     next(err);

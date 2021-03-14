@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../middlewares/jwt");
 const { insertUser, getUser } = require("../repositories/user");
+
 const signUp = async (data) => {
   try {
     let { password, emailId } = data;
@@ -38,4 +39,44 @@ const signUp = async (data) => {
   }
 };
 
-module.exports = { signUp };
+const logIn = async (data) => {
+  try {
+    let { emailId, password } = data;
+    const result = await getUser(emailId);
+    if (result.error || !result.userDetails) {
+      throw {
+        message: "Invalid Credentials",
+      };
+    }
+    if (result.userDetails) {
+      // compare the passwords
+      const passwordCheck = bcrypt.compareSync(
+        password,
+        result.userDetails.password
+      );
+      if (!passwordCheck) {
+        throw {
+          message: "Invalid Credentials",
+        };
+      }
+    }
+    let tokenPayload = {
+      ...result.userDetails,
+    };
+    tokenPayload.creationTime = result.userDetails.creationTime.toString();
+    tokenPayload._id = result.userDetails._id.toString();
+    tokenPayload.user_name = result.userDetails.user_name.toString();
+    tokenPayload.mobile_number = result.userDetails.mobile_number.toString();
+    tokenPayload.email_id = result.userDetails.email_id.toString();
+    const token = generateToken(tokenPayload);
+
+    return {
+      error: false,
+      token,
+    };
+  } catch (err) {
+    console.log("err: ", err);
+    return { error: true, err };
+  }
+};
+module.exports = { signUp, logIn };
