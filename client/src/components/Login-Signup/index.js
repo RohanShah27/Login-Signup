@@ -197,7 +197,9 @@ export default class LoginSignUp extends Component {
           <img src={homeImage} className="main-image" alt="picture" />
         </div>
         <div className="form-container">
-          <h1>Log in</h1>
+          <h1>
+            {this.state.selectedOption === "login" ? "Log in" : "Sign up"}
+          </h1>
           <Form
             inputFields={
               this.state.selectedOption === "login"
