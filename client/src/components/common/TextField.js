@@ -30,7 +30,7 @@ export default function TextField({
       >
         <input
           value={value}
-          id={id + "_element"}
+          id={id + "input"}
           placeholder={placeholder}
           type={type ? type : "text"}
           className="input-text-field"

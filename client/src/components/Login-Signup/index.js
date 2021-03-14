@@ -197,7 +197,7 @@ export default class LoginSignUp extends Component {
           <img src={homeImage} className="main-image" alt="picture" />
         </div>
         <div className="form-container">
-          <h1>
+          <h1 id="header">
             {this.state.selectedOption === "login" ? "Log in" : "Sign up"}
           </h1>
           <Form
@@ -211,6 +211,7 @@ export default class LoginSignUp extends Component {
           {/* based on selected option show ui element and handle onpress of the same */}
           {this.state.selectedOption === "login" ? (
             <div
+              id="sign-up-click"
               className="user-option"
               onClick={() => this.setState({ selectedOption: "signup" })}
             >
@@ -218,6 +219,7 @@ export default class LoginSignUp extends Component {
             </div>
           ) : (
             <div
+              id="log-in-click"
               className="user-option"
               onClick={() => this.setState({ selectedOption: "login" })}
             >
@@ -226,6 +228,7 @@ export default class LoginSignUp extends Component {
           )}
           {/* Button to handle submit click of the user */}
           <div
+            id="submit-click"
             className="submit-button"
             onClick={() => this.handleSubmitClicked(this.state.selectedOption)}
           >
