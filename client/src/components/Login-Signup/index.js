@@ -3,6 +3,7 @@ import Form from "../common/Form";
 import "../../assets/styles/main-form.css";
 import homeImage from "../../assets/images/home.svg";
 import encrypt from "../../helpers/encrypt";
+import { logInUser, signUp } from "../../actions/users";
 export default class LoginSignUp extends Component {
   // Declare the state
   state = {
@@ -52,6 +53,7 @@ export default class LoginSignUp extends Component {
         type: "password",
       },
     },
+    apiStatus: "",
   };
 
   /**
@@ -115,7 +117,24 @@ export default class LoginSignUp extends Component {
       const encryptedData = await encrypt(requestBody);
       if (!encryptedData.error) {
         // call action to call server with given
-        console.log(encryptedData);
+        if (this.state.selectedOption === "login") {
+          const result = await logInUser(encryptedData.encryptedData);
+          if (result.error) {
+            this.setState({ apiStatus: result.message });
+            setTimeout(() => {
+              this.setState({ apiStatus: "" });
+            }, 1500);
+          }
+        } else {
+          const result = await signUp(encryptedData.encryptedData);
+          if (result.error) {
+            this.setState({ apiStatus: result.message });
+            setTimeout(() => {
+              this.setState({ apiStatus: "" });
+            }, 1500);
+          }
+          //
+        }
       }
     }
   };
@@ -207,6 +226,11 @@ export default class LoginSignUp extends Component {
             onClick={() => this.handleSubmitClicked(this.state.selectedOption)}
           >
             Submit
+          </div>
+          <div className="error-toast">
+            {this.state.apiStatus ? (
+              <div className="error-message">{this.state.apiStatus}</div>
+            ) : null}
           </div>
         </div>
       </div>
