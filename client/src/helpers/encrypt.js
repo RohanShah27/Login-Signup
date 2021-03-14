@@ -8,7 +8,9 @@ export default async (data) => {
   try {
     // aes secret key
     let secretKey = `zvlfSIfNgBQR9EIASJu1`;
-
+    if (data === null) {
+      throw {};
+    }
     // Encrypting the payload using secret key
     var encryptedData = await CryptoJS.AES.encrypt(
       // data/ payload
