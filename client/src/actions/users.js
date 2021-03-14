@@ -14,11 +14,12 @@ const logInUser = async (encryptedData) => {
     await fetch(`${API_URL}/user-services/log-in`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        console.log("data: ", data);
         if (data.status !== 200) {
           responseObj.error = true;
         } else {
           responseObj.error = false;
+          //   Save token in local storage and redirect user to success screen
+          localStorage.setItem("token", data.data);
         }
         responseObj.message = data.message;
       })
@@ -39,7 +40,6 @@ const logInUser = async (encryptedData) => {
 
 const signUp = async (encryptedData) => {
   try {
-    console.log("encryptedData: ", encryptedData);
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },

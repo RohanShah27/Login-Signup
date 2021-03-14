@@ -118,6 +118,7 @@ export default class LoginSignUp extends Component {
       if (!encryptedData.error) {
         // call action to call server with given
         if (this.state.selectedOption === "login") {
+          //fetch login request
           const result = await logInUser(encryptedData.encryptedData);
           if (result.error) {
             this.setState({ apiStatus: result.message });
@@ -126,6 +127,7 @@ export default class LoginSignUp extends Component {
             }, 1500);
           }
         } else {
+          //fetch sign up request
           const result = await signUp(encryptedData.encryptedData);
           if (result.error) {
             this.setState({ apiStatus: result.message });
