@@ -24,4 +24,8 @@ const getUser = async (emailId) => {
     return { error: true };
   }
 };
-module.exports = { insertUser, getUser };
+
+const deleteUser = async (emailId) => {
+  await userModel.findOneAndDelete({ email_id: emailId });
+};
+module.exports = { insertUser, getUser, deleteUser };

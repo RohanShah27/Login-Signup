@@ -17,10 +17,20 @@ const statusCode = "400";
  */
 router.post("/log-in", async (req, res, next) => {
   try {
+    let { emailId, password } = req.body;
+    if (!emailId || !password) {
+      throw {
+        customMessage,
+        statusCode,
+      };
+    }
     const controllerResult = await logIn(req.body);
     if (controllerResult.error) {
       throw {
         customMessage: controllerResult.err.message,
+        statusCode: controllerResult.err.statusCode
+          ? controllerResult.err.statusCode
+          : 500,
       };
     }
     res.status(200).send({

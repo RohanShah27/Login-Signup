@@ -57,6 +57,7 @@ const logIn = async (data) => {
       if (!passwordCheck) {
         throw {
           message: "Invalid Credentials",
+          statusCode: 400,
         };
       }
     }
