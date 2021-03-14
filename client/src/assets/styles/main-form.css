@@ -103,3 +103,18 @@
   align-items: center;
   height: 100vh;
 }
+@media only screen and (max-width: 425px) {
+  .image-container {
+    display: none;
+  }
+  .form-container {
+    width: 100%;
+    margin-right: 0px;
+  }
+  .error-toast {
+    bottom: 20px;
+    top: unset;
+    left: unset;
+    justify-content: center;
+  }
+}
